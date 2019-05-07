@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SI 649 Lab 4</title>
+    <link rel="stylesheet" href="skeleton.css" />
+    <link rel="stylesheet" href="normalize.css" />   
+    <link rel="stylesheet" href="style.css" />    
+</head>
+<body> 
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src="draw.js"></script>
+   
+<div class="container">
+    <div class="row">
+        <div class="column">
+            <h1 style="margin-bottom:60px;border-bottom:1px solid #0094ff;padding:10px;">SI-649  Lab 4: Intro to Data Driven Documents (D3)</h1>
+        </div>       
+    </div>
+
+    <div class="row question">
+        <h3 style="color:#0094ff;">Scalable Vector Graphics or SVG</h3>
+    </div>
+
+
+    <div class="row question">
+        <h5>1.1 Draw an SVG Cirlce: </h5>
+    </div>
+    <div class="row answer">
+        <!--Add your code for circle here-->
+        <svg width="100" height="100">
+        	<circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow"/>
+        </svg>
+    </div>
+
+    <div class="row question">
+        <h5>1.2 Draw an SVG Rectangle: </h5>
+    </div>
+    <div class="row answer">
+        <!--Add your code for rectangle here-->
+         <svg width="100" height="100">
+        	<rect x="10" y="10" width="50" height="50" stroke="red" stroke-width="4"rx="15" ry="15" fill="yellow"/>
+        </svg>
+    </div>
+
+    <div class="row question">
+        <h5>1.3 Draw an SVG Line: </h5>
+    </div>
+    <div class="row answer">
+        <!--Add your code for line here-->
+        <svg width="50" height="50">
+        	<line x1="5" y1="5" x2="40" y2="40" stroke="gray" stroke-width="4"/>
+        </svg>
+
+    </div>
+
+    <div class="row question">
+        <h5>1.4 Draw an SVG Polyline: </h5>
+    </div>
+    <div class="row answer">
+        <!--Add your code for polyline here-->
+        <svg width="50" height="50">
+        	<polyline fill="none" stroke="blue" stroke-width="2"
+        		points = "05,30
+        				  15,30
+        				  15,20
+        				  25,20
+        				  25,10
+        				  35,10" />
+        </svg>
+    </div>
+
+    <div class="row question">
+        <h5>1.5 Draw an SVG Polygon: </h5>
+    </div>
+    <div class="row answer">
+        <!--Add your code for polygon here-->
+        <svg width="50" height="50">
+        	<polygon fill="yellow" stroke="blue" stroke-width="2"
+        		points="05,30
+        				15,10
+        				25,30" />
+        </svg>
+    </div>
+
+
+    <div class="row question">
+        <h5>1.6 Grouped elements with transformation: </h5>
+    </div>
+    <div class="row answer">
+        <!--Add your code for g here-->
+        <svg width="200" height="150">
+        	<g transform="translate(50,20) rotate(45 25 25)">
+        		<line x1="5" y1="5" x2="80" y2="5" stroke="gray" stroke-width="5" />
+        		<rect x="5" y="20" height="50" width="75" style="stroke: #006600;fill: #006600" />
+        		<text x="10" y="90" style="fill:#660000">SI 649 </text>
+        	</g>
+        </svg>
+    </div>
+
+    <div class="row question">
+        <h3 style="color:#0094ff;">D3.js</h3>
+    </div>
+
+    <div class="row question">
+        <h5><span style="color:#0094ff;text-decoration:underline;">Things D3 makes easier #1:</span> D3 lets you easily create, select and modify HTML and SVG elements </h5>
+        
+		<h6>2.1 Long form code:</h6>
+    </div>
+    <div class="row answer" id="q2-1"></div>
+	<script>
+		// Add your code for question 2.1 here
+		body = d3.select("#q2-1")
+		para = body.append("p")
+		para = para.text("alice")
+		para = para.style("color","red")
+	</script>
+
+
+    <div class="row question">
+        <h6>2.2 Method chaining code </h6>
+    </div>
+    <div class="row answer" id="q2-2"></div>
+	<script>
+		// Add your code for question 2.2 here
+		body = d3.select("#q2-2")
+		para = body.append("p")
+				   .text("alice")
+		 		   .style("color","red")
+	</script>
+
+    <div class="row question">
+        <h5><span style="color:#0094ff;text-decoration:underline;">Things D3 makes easier #2:</span> D3 lets you loop through data and represent them as SVG </h5>
+		<h6>2.3 Display each person:</h6>
+    </div>
+	<script>
+		// A simple dataset we'll use for the rest of this file (don't change)
+		people = [
+			{name: "Kelly", score: 10},
+			{name: "Jim", score: 5}, 
+			{name: "John", score: 8},
+			{name: "Sally", score: 7},
+			{name: "Mike", score: 9}
+		]	
+	</script>
+    <div class="row answer" id="q2-3"></div>
+	<script>	
+		// Add your code for question 2.3 here
+		d3.select("#q2-3")
+		   .selectAll("p")
+		   .data(people)
+		   .enter()
+		   .append("p")
+		   .text((d,i)=>"Person at index " + i + " in the dataset is: " + d.name)
+	</script>
+
+    <div class="row question">
+		<h6>2.4 Display each person and their score:</h6>
+    </div>
+    <div class="row answer" id="q2-4"></div>
+	<script>	
+		// Add your code for question 2.4 here
+		d3.select("#q2-4")
+		   .selectAll("p")
+		   .data(people)
+		   .enter()
+		   .append("p")
+		   .text((d,i)=>"Person at index " + i + " in the dataset is: " + d.name +" with score: " + d.score)
+	</script>
+	
+	
+    <div class="row question">
+        <h5><span style="color:#0094ff;text-decoration:underline;">Things D3 makes easier #3:</span> D3 lets you configure the look and feel of elements based on data </h5>
+		<h6>2.5 Make color a function of score:</h6>
+    </div>
+    <div class="row answer" id="q2-5"></div>
+	<script>	
+		// Add your code for question 2.5 here
+		d3.select("#q2-5")
+		   .selectAll("p")
+		   .data(people)
+		   .enter()
+		   .append("p")
+		   .text((d,i)=>"Person at index " + i + " in the dataset is: " + d.name +" with score: " + d.score)
+		   .style("color",(d,i)=>{
+		   		if(d.score>=9){
+		   			return "red"
+		   		}
+		   		else{
+		   			return "black"
+		   		}
+		   })
+
+	</script>
+
+    <div class="row question">
+		<h6>2.6 Make color a linear function of score:</h6>
+    </div>
+    <div class="row answer" id="q2-6"></div>
+	<script>	
+		// Add your code for question 2.6 here
+		d3.select("#q2-6")
+		   .selectAll("p")
+		   .data(people)
+		   .enter()
+		   .append("p")
+		   .text((d,i)=>"Person at index " + i + " in the dataset is: " + d.name +" with score: " + d.score)
+		   .style("color",(d,i)=>"rgb("+d.score*25.5+",0,0)"
+		   )
+	</script>
+
+    <div class="row question">
+        <h5><span style="color:#0094ff;text-decoration:underline;">Things D3 makes easier #4:</span> D3 lets you draw SVG elements that are bound to data</h5>
+		<h6>2.7 Create squares for each person's score</h6>
+    </div>
+    <div class="row answer" id="q2-7"></div>
+	<script>	
+		// Add your code for question 2.7 here
+		svg = d3.select("#q2-7")
+				.append("svg")
+				.attr("width",500)
+				.attr("height",100)
+
+		svg.selectAll("rect")
+			.data(people)
+			.enter()
+			.append("rect")
+			.attr("width",(d,i)=>d.score*5)
+			.attr("height",(d,i)=>d.score*5)
+			.attr("y",10)
+			.attr("x",(d,i)=>i*100)
+	</script>
+
+    <div class="row question">
+		<h6>2.8 Put each person's name below their square and change the squares to circles</h6>
+    </div>
+    <div class="row answer" id="q2-8"></div>
+	<script>	
+		// Add your code for question 2.8 here
+		svg = d3.select("#q2-8")
+				.append("svg")
+				.attr("width",500)
+				.attr("height",100)
+		svg.selectAll("text")
+			.data(people)
+			.enter()
+			.append("text")
+			.text((d,i)=>d.name)
+		 	.attr("fill","gray")
+		 	.attr("y",70)
+			.attr("x",(d,i)=>i*100+5)
+		 	
+		svg.selectAll("circle")
+			.data(people)
+			.enter()
+			.append("circle")
+			.attr("r",(d,i)=>d.score*2)
+			.attr("cy",25)
+			.attr("cx",(d,i)=>i*100+20)
+		
+	</script>
+
+	<div class="row question">
+        <h3 style="color:#0094ff;">3. Making grids</h3>
+		<h6>3.1 Making a grid row-wise</h6>
+    </div>
+    <div class="row answer" id="q3-1"></div>
+	<script>	
+		// Comment each line below indicating what it does		
+		//create svg with d3 
+		//https://www.dashingd3js.com/using-the-svg-coordinate-space
+		svg = d3.select("#q3-1") 
+			.append("svg")
+			.attr("width", 300)
+			.attr("height", 300)
+
+		// define grid width and height
+		rectWidth = 20
+		rectHeight = 20
+    	
+    	//create 10 rows, and then transform the y axis of each row according to the rectHight
+    	//https://bl.ocks.org/cagrimmett/07f8c8daea00946b9e704e3efcbd5739
+		rows = svg.selectAll(".row")
+			.data(d3.range(10))
+			.enter()
+			.append("g")
+			.attr("class", "row")
+			.attr("transform", (d, i) => "translate(0," + (rectHeight * i) + ")")
+		
+		//for each row, create 10 rectangles, and then change the x axis according to the rectWidth
+		//for each rectangle, the height and width are equal to the grid's height and width, and the stroke color is white, the filling color is black.
+		//https://bl.ocks.org/cagrimmett/07f8c8daea00946b9e704e3efcbd5739
+		rects = rows.selectAll("rect")
+			.data(d3.range(10))
+			.enter()
+			.append("rect")
+			.attr("x", (d, i) => rectWidth * i)
+			.attr("y", 0)
+			.attr("height", rectHeight)
+			.attr("width", rectWidth)
+			.attr("stroke", "white");
+	</script>
+
+	<div class="row question">
+		<h6>3.2 Making a grid at once</h6>
+    </div>
+    <div class="row answer" id="q3-2"></div>
+	<script>	
+		// Comment each line below indicating what it does		
+		//create svg with d3 
+		//https://www.dashingd3js.com/using-the-svg-coordinate-space
+		svg = d3.select("#q3-2")
+			.append("svg")
+			.attr("width", 300)
+			.attr("height", 300)
+
+		// define grid width and height
+		rectWidth = 20
+		rectHeight = 20
+    	
+    	//create 100 rectangles, and then change the x axis and y axis according to their location to make a grid
+    	//https://bl.ocks.org/cagrimmett/07f8c8daea00946b9e704e3efcbd5739
+		rects = svg.selectAll("rect")
+			.data(d3.range(100))
+			.enter()
+			.append("rect")
+			.attr("x", (d, i) => rectWidth * (i % 10))
+			.attr("y", (d, i) => rectWidth * Math.floor(i / 10))
+			.attr("height", rectHeight)
+			.attr("width", rectWidth)
+			.attr("stroke", "white");
+	</script>
+
+	
+</div>
+</body>
+</html>

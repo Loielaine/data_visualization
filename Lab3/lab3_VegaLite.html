@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<head>
+    <title>Vega Lite Bar Chart</title>
+    <meta charset="utf-8">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+
+    <!--uncomment if you decide to use advanced tooltips-->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.4.4/vega-tooltip.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/vega-tooltip/0.4.4/vega-tooltip.css"> -->
+
+    <!--d3 and jquery might be helpful if you want to load data only once-->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <style media="screen">
+        /* Add space between Vega-Embed links  */
+        .vega-actions a {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Container for the visualization -->
+<div id="chart1"></div>
+<div id="chart2"></div>
+<div id="chart3"></div>
+<div id="chart4"></div>
+<div id="chart5"></div>
+<div id="chart5_1"></div>
+<div id="chart5_2"></div>
+<div id="chart6"></div>
+
+
+<script>
+    //initiate renderer, use it for all vega-embed.
+    var opt = {"renderer": "svg", mode: "vega-lite"};
+    var width = 600;
+
+    //chart 1
+    spec_1 = {
+    "data":{"url":"movies_lab3.json"},
+    "encoding":{
+        "x":{"field":"Major_Genre","type":"nominal"},
+        "y":{"field":"Worldwide_Gross","type":"quantitative"}
+    },
+    "mark":{"type":"point","shape":"square","filled": true},
+    "width":width
+    }
+    vegaEmbed("#chart1",spec_1,opt)
+    //chart 2
+    spec_2 = {
+    "data":{"url":"movies_lab3.json"},
+    "encoding":{
+        "x":{"field":"Major_Genre","type":"nominal"},
+        "y":{"field":"Worldwide_Gross","type":"quantitative","aggregate": "mean"}
+    },
+    "mark":"line",
+    "width":width
+    }
+    vegaEmbed("#chart2",spec_2,opt)
+    //chart 3
+    spec_3 = {
+    "data":{"url":"movies_lab3.json"},
+    "layer":[
+        {
+        "encoding":{
+            "x":{"field":"Major_Genre","type":"nominal"},
+            "y":{"field":"Worldwide_Gross","type":"quantitative"},
+            "color":{"field":"Major_Genre","type":"nominal"},
+             "tooltip": {"field": "Title", "type": "nominal"}
+        },
+        "mark":{"type":"point","shape":"square","filled": true},
+        "width":width
+        },
+        {
+        "encoding":{
+            "x":{"field":"Major_Genre","type":"nominal"},
+            "y":{"field":"Worldwide_Gross","type":"quantitative","aggregate": "mean"}
+        },
+        "mark":"line",
+        "width":width   
+        }
+    ]
+    }
+    vegaEmbed("#chart3",spec_3,opt)
+    //chart 4
+    spec_4 = {
+    "data":{"url":"movies_lab3.json"},
+    "transform": [
+    {"calculate": "datum.Worldwide_Gross-datum.Production_Budget", "as": "Revenue"}
+    ],
+    "layer":[
+        {
+        "encoding":{
+            "x":{"field":"Major_Genre","type":"nominal"},
+            "y":{"field":"Revenue","type":"quantitative"},
+            "color":{"field":"Major_Genre","type":"nominal"},
+             "tooltip": {"field": "Title", "type": "nominal"}
+        },
+        "mark":{"type":"point","shape":"square","filled": true},
+        "width":width
+        },
+        {
+        "encoding":{
+            "x":{"field":"Major_Genre","type":"nominal"},
+            "y":{"field":"Revenue","type":"quantitative","aggregate": "mean"}
+        },
+        "mark":"line",
+        "width":width   
+        }
+    ]
+    }
+    vegaEmbed("#chart4",spec_4,opt)
+    //chart 5
+    // Per the instructions, you will first create chart 5_1 and chart 5_2.
+    // After merging them into chart 5, you can delete chart 5_1 and chart 5_2 if you want.
+    spec_5 = {
+    "data":{"url":"movies_lab3.json"},
+    "transform": [
+    {"calculate": "datum.Worldwide_Gross-datum.Production_Budget", "as": "Revenue"}
+    ],
+     "vconcat":[
+     {  
+        "selection": {
+        "brush": {"type": "interval", "encodings": ["x"]}
+        },
+        "encoding":{
+            "x":{"field":"Release_Date","type":"temporal","timeUnit": "month"},
+            "y":{"field":"Revenue","type":"quantitative","aggregate": "mean"}
+        },
+        "mark":{"type":"line"},
+        "width":width
+    },
+      {
+        "transform": [
+        {"filter": {"selection": "brush"}}],
+       "encoding":{
+            "x":{"field":"Release_Date","type":"temporal","timeUnit": "day"},
+            "y":{"field":"Revenue","type":"quantitative","aggregate": "mean"}
+        },
+        "mark":{"type":"line"},
+        "width":width
+    }
+        ]
+    }
+    vegaEmbed("#chart5",spec_5,opt)
+    //(BONUS) chart 6
+     spec_6 = {
+    "data":{"url":"movies_lab3.json"},
+    "transform": [
+    {"calculate": "abs(datum.Worldwide_Gross-datum.Production_Budget)", "as": "Revenue/Loss"},
+    {"calculate": "datum.Worldwide_Gross-datum.Production_Budget", "as": "Revenue"},
+    {"calculate":"datum.Revenue>0 ? 'Profit' : 'Loss'","as":"Profit_or_not"},
+    {"filter":{"timeUnit": "year", "field": "Release_Date", "lte": "2019"}}
+    ],
+    "encoding":{
+        "x":{"field":"Release_Date","type":"temporal","timeUnit": "year"},
+        "y":{"field":"Major_Genre","type":"nominal"},
+        "size": {
+          "field": "Revenue/Loss",
+          "type": "quantitative",
+          "aggregate": "sum",
+           "scale": {"range": [0, 1000]},
+          "legend": {"title": "Revenue/Loss", "clipHeight": 30}
+            },
+        "color":{"field": "Profit_or_not",
+          "type": "nominal"
+            },
+        },
+    "mark": {
+            "type": "circle",
+            "opacity": 0.5,
+            "stroke": "gray",
+            "strokeWidth": 0.5
+    }, 
+    "width":width}
+    vegaEmbed("#chart6",spec_6,opt)
+</script>
+</body>
+</html>
